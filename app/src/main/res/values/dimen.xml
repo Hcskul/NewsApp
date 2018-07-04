@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="paddingFromScreen">16dp</dimen>
+    <dimen name="smallTextSize">12sp</dimen>
+    <dimen name="bigTextSize">16sp</dimen>
+</resources>
