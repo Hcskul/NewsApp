@@ -3,4 +3,5 @@
     <dimen name="paddingFromScreen">16dp</dimen>
     <dimen name="smallTextSize">12sp</dimen>
     <dimen name="bigTextSize">16sp</dimen>
+    <dimen name="sectionWidth">50dp</dimen>
 </resources>

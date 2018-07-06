@@ -60,6 +60,8 @@ public final class QueryHelperClass {
 
             JSONArray resultsArray = responseJSONObject.getJSONArray("results");
 
+            Log.v("QAAAAAAAAA", String.valueOf(resultsArray.length()));
+
             // For each article in the resultsArray, create an {@link News} object
             for (int i = 0; i < resultsArray.length(); i++) {
 
@@ -79,11 +81,17 @@ public final class QueryHelperClass {
                 String url = currentArticle.getString("webUrl");
 
                 JSONArray tagsArray = currentArticle.getJSONArray("tags");
-                JSONObject tagsObject = tagsArray.getJSONObject(0);
 
-                // Extract the value for the key called "webTitle"
-                String author = tagsObject.getString("webTitle");
+                String author = "No author provided";
 
+                if (tagsArray.length() != 0) {
+                    JSONObject tagsObject = tagsArray.getJSONObject(0);
+
+                    // Extract the value for the key called "webTitle"
+                    author = tagsObject.getString("webTitle");
+                } else {
+                    Log.v("QueryHelperClass", "No tags Array given for this article.");
+                }
 
                 // Create a new {@link News} object with the magnitude, location, time,
                 // and url from the JSON response.

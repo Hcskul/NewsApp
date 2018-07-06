@@ -1,20 +1,14 @@
 package com.example.lukas.newsapp;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class NewsAdapter extends ArrayAdapter<News> {
 
@@ -50,27 +44,27 @@ public class NewsAdapter extends ArrayAdapter<News> {
         News currentNews = getItem(position);
 
         // Find the TextView in the list_item.xml layout with the ID section
-        TextView sectionTextView = (TextView) listItemView.findViewById(R.id.section);
+        TextView sectionTextView = listItemView.findViewById(R.id.section);
         // set this text on the name TextView
         sectionTextView.setText(currentNews.getSection());
 
         // Find the TextView in the list_item.xml layout with the ID author
-        TextView authorTextView = (TextView) listItemView.findViewById(R.id.author);
+        TextView authorTextView = listItemView.findViewById(R.id.author);
         // set this text on the name TextView
         authorTextView.setText(currentNews.getAuthor());
 
         // Find the TextView in the list_item.xml layout with the ID title
-        TextView titleTextView = (TextView) listItemView.findViewById(R.id.articleTitle);
+        TextView titleTextView = listItemView.findViewById(R.id.articleTitle);
         // set this text on the name TextView
         titleTextView.setText(currentNews.getTitle());
 
         // Find the TextView with view ID date
-        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-        // Display the date of the current earthquake in that TextView
+        TextView dateView = listItemView.findViewById(R.id.date);
+        // Display the date of the current article in that TextView
         dateView.setText(formatDate(currentNews.getDate())[0]);
 
         // Find the TextView with view ID time
-        TextView timeView = (TextView) listItemView.findViewById(R.id.time);
+        TextView timeView = listItemView.findViewById(R.id.time);
         timeView.setText(formatDate(currentNews.getDate())[1]);
 
         return listItemView;
@@ -88,7 +82,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
         if (completeString.contains(DATE_SEPARATOR)) {
             int separator = completeString.indexOf(DATE_SEPARATOR);
             partOne = completeString.substring(0, separator);
-            partTwo = completeString.substring(separator + 1, completeString.length()-1);
+            partTwo = completeString.substring(separator + 1, completeString.length() - 1);
         } else {
             partOne = getContext().getString((R.string.no_date));
             partTwo = "";

@@ -4,12 +4,16 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -28,8 +32,7 @@ public class NewsActivity extends AppCompatActivity
     /**
      * URL for news data from the guardian API
      */
-    private static final String GUARDIAN_URL = "https://content.guardianapis.com/search?q=sports%20AND%20football%20AND%20World%20Cup%202018&show-tags=" +
-            "contributor&api-key=1d4042b0-e927-471d-9fe7-3f3eae703a82";
+    private static final String GUARDIAN_BASE_URL = "https://content.guardianapis.com/search";
     /**
      * Adapter for the list of news
      */
@@ -49,9 +52,9 @@ public class NewsActivity extends AppCompatActivity
         setContentView(R.layout.activity_news);
 
         // Find a reference to the {@link ListView} in the layout
-        ListView newsListView = (ListView) findViewById(R.id.list);
+        ListView newsListView = findViewById(R.id.list);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.loading_spinner);
+        mProgressBar = findViewById(R.id.loading_spinner);
 
         // checks if there is an active internet connection
         ConnectivityManager cm =
@@ -61,7 +64,7 @@ public class NewsActivity extends AppCompatActivity
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        mEmptyStateTextView = findViewById(R.id.empty_view);
         newsListView.setEmptyView(mEmptyStateTextView);
         if (!isConnected) {
             mProgressBar.setVisibility(View.GONE);
@@ -110,10 +113,62 @@ public class NewsActivity extends AppCompatActivity
     }
 
     @Override
+    // This method initialize the contents of the Activity's options menu.
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the Options Menu we specified in XML
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
     public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
         Log.v("onCreateLoader", "Loader onCreate");
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
+        String firstTopic = sharedPrefs.getString(
+                getString(R.string.settings_first_topic_key),
+                getString(R.string.settings_first_topic_default));
+
+        String secondTopic = sharedPrefs.getString(
+                getString(R.string.settings_second_topic_key),
+                getString(R.string.settings_second_topic_default));
+
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
+
+
+        // parse breaks apart the URI string that's passed into its parameter
+        Uri baseUri = Uri.parse(GUARDIAN_BASE_URL);
+
+        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        // Append query parameter and its value. For example, the `format=geojson`
+        uriBuilder.appendQueryParameter("q", firstTopic);
+        uriBuilder.appendQueryParameter("q", secondTopic);
+        uriBuilder.appendQueryParameter("order-by", orderBy);
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("api-key", "1d4042b0-e927-471d-9fe7-3f3eae703a82");
+
+        Log.v("initLoader", uriBuilder.toString());
         // Create a new loader for the given URL
-        return new NewsLoader(this, GUARDIAN_URL);
+        return new NewsLoader(this, uriBuilder.toString());
 
     }
 
