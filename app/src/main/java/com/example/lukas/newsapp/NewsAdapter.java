@@ -53,6 +53,11 @@ public class NewsAdapter extends ArrayAdapter<News> {
         // set this text on the name TextView
         authorTextView.setText(currentNews.getAuthor());
 
+        // if the author is not provided, show that as a text
+        if (currentNews.getAuthor() == "") {
+            authorTextView.setText(R.string.no_author);
+        }
+
         // Find the TextView in the list_item.xml layout with the ID title
         TextView titleTextView = listItemView.findViewById(R.id.articleTitle);
         // set this text on the name TextView

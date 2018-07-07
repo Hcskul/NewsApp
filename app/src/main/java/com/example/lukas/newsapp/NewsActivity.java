@@ -45,6 +45,7 @@ public class NewsActivity extends AppCompatActivity
      * ProgressBar that is displayed when the data gets fetched is empty
      */
     private ProgressBar mProgressBar;
+    private boolean debug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +165,7 @@ public class NewsActivity extends AppCompatActivity
         uriBuilder.appendQueryParameter("q", secondTopic);
         uriBuilder.appendQueryParameter("order-by", orderBy);
         uriBuilder.appendQueryParameter("show-tags", "contributor");
-        uriBuilder.appendQueryParameter("api-key", "1d4042b0-e927-471d-9fe7-3f3eae703a82");
+        uriBuilder.appendQueryParameter("api-key", BuildConfig.ApiKey);
 
         Log.v("initLoader", uriBuilder.toString());
         // Create a new loader for the given URL
